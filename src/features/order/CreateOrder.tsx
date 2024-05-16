@@ -81,7 +81,7 @@ const CreateOrder: FC = () => {
             )}
           </div>
           {!user.address && (
-            <span className='absolute right-[3px] top-[3px] z-50'>
+            <span className='absolute right-[3px] top-[3px] z-20'>
               <Button
                 disabled={isLoading}
                 type='small'

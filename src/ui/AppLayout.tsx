@@ -12,13 +12,17 @@ export const AppLayout: FC = () => {
     <div className='grid h-screen grid-rows-[auto_1fr_auto]'>
       {isLoading && <Spinner />}
 
-      <Header />
-      <div className='overflow-scroll'>
-        <main className='mx-auto max-w-3xl'>
-          <Outlet />
-        </main>
-      </div>
-      <CartOverview />
+      {!isLoading && (
+        <>
+          <Header />
+          <div className='overflow-scroll'>
+            <main className='mx-auto max-w-3xl'>
+              <Outlet />
+            </main>
+          </div>
+          <CartOverview />
+        </>
+      )}
     </div>
   )
 }
