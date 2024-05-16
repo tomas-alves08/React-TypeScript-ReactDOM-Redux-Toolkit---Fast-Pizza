@@ -1,17 +1,30 @@
 // Test ID: IIDSAT
 
-import { IDelivery, IItem } from '../../utilities/schemas'
+import { IDelivery, IItem, IPizza } from '../../utilities/schemas'
 import {
   calcMinutesLeft,
   formatCurrency,
   formatDate,
 } from '../../utilities/helpers'
 import { getOrder } from '../../services/apiRestaurant'
-import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom'
+import { LoaderFunctionArgs, useFetcher, useLoaderData } from 'react-router-dom'
 import OrderItem from './OrderItem'
+import UpdateOrder from './UpdateOrder'
+import { useEffect } from 'react'
 
 function Order() {
   const order = useLoaderData() as IDelivery
+
+  const fetcher = useFetcher()
+
+  console.log('fetcher: ', fetcher)
+
+  useEffect(() => {
+    if (!fetcher.data && fetcher.state === 'idle') fetcher.load('/menu')
+  }, [])
+
+  console.log('data: ', fetcher.data)
+
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
     id,
@@ -60,7 +73,18 @@ function Order() {
         {cart &&
           cart.map((item) => {
             console.log('item: ', item.pizzaId)
-            return <OrderItem item={item as IItem} key={item.pizzaId} />
+            return (
+              <OrderItem
+                item={item as IItem}
+                key={item.pizzaId}
+                isLoadingIngredients={fetcher.state === 'loading'}
+                ingredients={
+                  fetcher.data?.find(
+                    (el: IPizza) => Number(el.id) === item.pizzaId,
+                  ).ingredients
+                }
+              />
+            )
           })}
       </ul>
 
@@ -78,15 +102,15 @@ function Order() {
           {formatCurrency((orderPrice || 0) + priorityPrice)}
         </p>
       </div>
+
+      {!priority && <UpdateOrder order={order} />}
     </div>
   )
 }
 
 export async function loader(args: LoaderFunctionArgs<{ orderId: string }>) {
-  console.log(args.params.orderId)
   if (typeof args.params.orderId === 'string') {
     const order = (await getOrder(args.params.orderId)) as IDelivery[]
-    console.log(order)
     return order
   }
 }

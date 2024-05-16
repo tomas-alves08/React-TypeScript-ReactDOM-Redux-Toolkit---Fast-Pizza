@@ -44,6 +44,20 @@ export interface IDelivery {
   status: string
 }
 
+export interface IOrderUpdate {
+  id?: string
+  customer?: string
+  phone?: string
+  address?: string
+  priority?: boolean
+  estimatedDelivery?: string
+  cart?: IItem[]
+  position?: string
+  orderPrice?: number
+  priorityPrice?: number
+  status?: string
+}
+
 export interface IButtonStyles {
   primary: string
   small: string

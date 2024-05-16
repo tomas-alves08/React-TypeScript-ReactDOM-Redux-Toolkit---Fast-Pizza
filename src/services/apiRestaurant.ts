@@ -1,4 +1,4 @@
-import { IDelivery } from '../utilities/schemas'
+import { IDelivery, IOrderUpdate } from '../utilities/schemas'
 
 const API_URL = 'https://react-fast-pizza-api.onrender.com/api'
 
@@ -38,7 +38,7 @@ export async function createOrder(newOrder: IDelivery) {
   }
 }
 
-export async function updateOrder(id: string, updateObj: IDelivery) {
+export async function updateOrder(id: string, updateObj: IOrderUpdate) {
   try {
     const res = await fetch(`${API_URL}/order/${id}`, {
       method: 'PATCH',
